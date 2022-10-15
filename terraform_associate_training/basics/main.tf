@@ -120,9 +120,21 @@ resource "aws_instance" "web_server" {
   ami                    = "ami-06672d07f62285d1d"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnets["public_subnet_1"].id
-  vpc_security_group_ids = ["sg-056d731c23e09bab1"]
+  vpc_security_group_ids = ["sg-04ef42f1b890613b0"]
 
   tags = {
     Name = "Web EC2 Server"
+  }
+}
+
+resource "aws_subnet" "variable-subnet" {
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.variable_sub_cidr
+  availability_zone       = var.variable_sub_az
+  map_public_ip_on_launch = var.variable_sub_auto_ip
+
+  tags = {
+    Name      = "sub-variables-${var.variable_sub_az}"
+    Terraform = "true"
   }
 }
