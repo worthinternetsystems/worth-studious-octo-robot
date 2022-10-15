@@ -8,7 +8,7 @@ data "aws_availability_zones" "available" {}
 data "aws_region" "current" {}
 
 locals {
-  team = "api_mgmt_dev"
+  team        = "api_mgmt_dev"
   application = "core-api"
   server_name = "ec2-${var.environment}-api-${var.variable_sub_az}"
 }
@@ -21,6 +21,7 @@ resource "aws_vpc" "vpc" {
     Name        = var.vpc_name
     Environment = "demo_environment"
     Terraform   = "true"
+    Region      = data.aws_region.current.name
   }
 }
 
@@ -122,16 +123,32 @@ resource "aws_nat_gateway" "nat_gateway" {
   }
 }
 
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"]
+}
+
 resource "aws_instance" "web_server" {
-  ami                    = "ami-06672d07f62285d1d"
+  ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnets["public_subnet_1"].id
   vpc_security_group_ids = ["sg-04ef42f1b890613b0"]
 
   tags = {
-    Name    = local.server_name
-    Owner   = local.team
-    App     = local.application
+    Name  = local.server_name
+    Owner = local.team
+    App   = local.application
   }
 }
 
