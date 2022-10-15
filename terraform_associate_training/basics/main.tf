@@ -7,6 +7,12 @@ provider "aws" {
 data "aws_availability_zones" "available" {}
 data "aws_region" "current" {}
 
+locals {
+  team = "api_mgmt_dev"
+  application = "core-api"
+  server_name = "ec2-${var.environment}-api-${var.variable_sub_az}"
+}
+
 #Define the VPC 
 resource "aws_vpc" "vpc" {
   cidr_block = var.vpc_cidr
@@ -123,7 +129,9 @@ resource "aws_instance" "web_server" {
   vpc_security_group_ids = ["sg-04ef42f1b890613b0"]
 
   tags = {
-    Name = "Web EC2 Server"
+    Name    = local.server_name
+    Owner   = local.team
+    App     = local.application
   }
 }
 
