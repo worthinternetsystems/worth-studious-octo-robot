@@ -143,7 +143,7 @@ resource "aws_instance" "web_server" {
   ami                    = data.aws_ami.ubuntu.id
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnets["public_subnet_1"].id
-  vpc_security_group_ids = ["sg-04ef42f1b890613b0"]
+  vpc_security_group_ids = ["sg-0ab6ad2e9e618e181"]
 
   tags = {
     Name  = local.server_name
