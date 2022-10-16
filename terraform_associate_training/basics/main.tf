@@ -1,3 +1,9 @@
+/* 
+Name: IaC Buil out for Terraform Associate Exam
+Description: AWS Infrastructure Buildout
+Contributors: Bryan Gab & Nav
+*/
+
 # Configure the AWS Provider
 provider "aws" {
   region = "eu-west-2"
